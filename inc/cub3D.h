@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 12:57:13 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/04/30 03:45:52 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/01 18:35:55 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,19 @@
 #ifndef O_DIRECTORY
 # define O_DIRECTORY 0x10000
 #endif
+
+typedef enum e_opcode
+{
+	NORTH_TEXTURE,
+	SOUTH_TEXTURE,
+	WEST_TEXTURE,
+	EAST_TEXTURE,
+	FLOOR_COLOR,
+	CEILING_COLOR,
+	MAP,
+	ERROR_OPCODE,
+	SPACE_OPCODE
+}				t_opcode;
 
 typedef enum e_direction
 {
