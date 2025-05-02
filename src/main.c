@@ -6,13 +6,13 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:11:15 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/01 21:01:53 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/02 17:32:42 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3D.h"
 
-void	init_img(t_img *img)
+void	init_img(t_texture_img *img)
 {
 	img->name = NULL;
 	img->img = NULL;
@@ -36,10 +36,10 @@ void	init_map(t_map_info *map)
 
 void	init_game_info(t_game_info *game_info)
 {
-	game_info->north_texture = safe_malloc(sizeof(t_img));
-	game_info->south_texture = safe_malloc(sizeof(t_img));
-	game_info->west_texture = safe_malloc(sizeof(t_img));
-	game_info->east_texture = safe_malloc(sizeof(t_img));
+	game_info->north_texture = safe_malloc(sizeof(t_texture_img));
+	game_info->south_texture = safe_malloc(sizeof(t_texture_img));
+	game_info->west_texture = safe_malloc(sizeof(t_texture_img));
+	game_info->east_texture = safe_malloc(sizeof(t_texture_img));
 	game_info->map_data = safe_malloc(sizeof(t_map_info));
 	init_img(game_info->north_texture);
 	init_img(game_info->south_texture);
@@ -56,7 +56,7 @@ void	init_game_info(t_game_info *game_info)
 	game_info->mlx_win = NULL;
 }
 
-bool	is_dir(char *filename)
+bool	is_directory(char *filename)
 {
 	int	fd;
 
@@ -86,7 +86,7 @@ int	check_file(char *filename)
 {
 	int	fd;
 
-	if (is_dir(filename) == true)
+	if (is_directory(filename) == true)
 		return (error_msg(2, ERR_FILE_IS_DIR, filename));
 	if (has_cub_extension(filename) != true)
 		return (error_msg(2, ERR_INVALID_EXTENSION, filename));
@@ -109,7 +109,7 @@ void	free_game_info_no_mlx(t_game_info *game_info)
 	free(game_info);
 }
 
-void	free_mlx_img(void *mlx, t_img *img)
+void	free_mlx_img(void *mlx, t_texture_img *img)
 {
 	if (img)
 	{
@@ -132,14 +132,14 @@ void	free_map(t_map_info *map_info)
 			free(map_info->map[i]);
 			i++;
 		}
-		free(map_info->map[i]);
+		free(map_info->map);
 	}
 	free(map_info);
 }
 
 void	free_game_info(t_game_info *game_info)
 {
-	if (game_info)
+	if (!game_info)
 		return ;
 	free_mlx_img(game_info->mlx, game_info->north_texture);
 	free_mlx_img(game_info->mlx, game_info->south_texture);
@@ -155,36 +155,47 @@ void	free_game_info(t_game_info *game_info)
 
 int	is_map_line(char *line)
 {
-	int	i;
+	int		i;
+	bool	has_valid_char;
 
 	i = 0;
+	has_valid_char = false;
 	if (!line || !*line)
 		return (0);
-	while (line[i])
+	while (line[i] && line[i] == ' ')
+		i++;
+	if (!line[i])
+		return (0);
+	while (line[i] && line[i] != '\n' && line[i] != '\r')
 	{
 		if (line[i] == ' ' || line[i] == '0' || line[i] == '1' || line[i] == 'N'
 			|| line[i] == 'S' || line[i] == 'E' || line[i] == 'W')
+		{
+			if (line[i] == '0' || line[i] == '1')
+				has_valid_char = true;
 			i++;
+		}
 		else
 			return (0);
 	}
-	// mapに少なくとも0か1が存在するか
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] == '0' || line[i] == '1')
-			return (1);
-		i++;
-	}
+	if (has_valid_char)
+		return (1);
 	return (0);
 }
 
 int	check_value_handle(char *line)
 {
-	int	i;
+	int		i;
+	char	*tmp_line;
 
-	if (!line && *(line))
+	if (!line || !*line)
 		return (SPACE_OPCODE);
+	tmp_line = strdup(line);
+	if (!tmp_line)
+		return (ERROR_OPCODE);
+	i = strlen(tmp_line) - 1;
+	if (i >= 0 && (tmp_line[i] == '\n' || tmp_line[i] == '\r'))
+		tmp_line[i] = '\0';
 	i = 0;
 	while (line[i] && line[i] == ' ')
 		i++;
@@ -209,9 +220,9 @@ int	check_value_handle(char *line)
 
 int	set_texture(t_game_info *game_info, char *line, t_opcode opcode)
 {
-	t_img	*texture;
-	char	*path;
-	int		i;
+	t_texture_img	*texture;
+	char			*path;
+	int				i;
 
 	texture = NULL;
 	if (opcode == NORTH_TEXTURE)
@@ -223,36 +234,81 @@ int	set_texture(t_game_info *game_info, char *line, t_opcode opcode)
 	else if (opcode == EAST_TEXTURE)
 		texture = game_info->east_texture;
 	i = 0;
-	while (line[i] && line != ' ')
+	while (line[i] && line[i] != ' ')
 		i++;
-	while (line[i] && line != ' ')
+	while (line[i] && line[i] == ' ')
 		i++;
-	path = strduo(line + i);
+	path = strdup(line + i);
 	if (!path)
 		return (1);
 	if (texture->name) //もうsetされたいた場合
-		return (-1);
+		free(path);
+	else
+		texture->name = path;
 	return (0);
 }
 
 void	set_colore(t_game_info *game_info, char *line, t_opcode opcode)
 {
 	int	i;
+	int	j;
 	int	red;
 	int	green;
 	int	blue;
 	int	*color;
 
+	char num_str[4]; // 最大3桁の数字 + 終端文字
 	if (opcode == FLOOR_COLOR)
 		color = game_info->floor_color;
 	else if (opcode == CEILING_COLOR)
 		color = game_info->ceiling_color;
+	// 識別子 "F " や "C " をスキップ
 	i = 0;
 	while (line[i] && line[i] != ' ')
 		i++;
 	while (line[i] && line[i] == ' ')
 		i++;
-	// if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+	// 赤色の値を抽出
+	j = 0;
+	while (line[i] && line[i] != ',')
+	{
+		if (j < 3)
+			num_str[j++] = line[i];
+		i++;
+	}
+	num_str[j] = '\0';
+	red = atoi(num_str);
+	// カンマをスキップ
+	if (line[i] == ',')
+		i++;
+	// 緑色の値を抽出
+	j = 0;
+	while (line[i] && line[i] != ',')
+	{
+		if (j < 3)
+			num_str[j++] = line[i];
+		i++;
+	}
+	num_str[j] = '\0';
+	green = atoi(num_str);
+	// カンマをスキップ
+	if (line[i] == ',')
+		i++;
+	// 青色の値を抽出
+	j = 0;
+	while (line[i] && line[i] != ',' && line[i] != '\n')
+	{
+		if (j < 3)
+			num_str[j++] = line[i];
+		i++;
+	}
+	num_str[j] = '\0';
+	blue = atoi(num_str);
+	// 値の範囲チェック（0-255）
+	if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0
+		|| blue > 255)
+		error_exit(2, "Invalid color values (must be 0-255)");
+	// 色情報を保存
 	color[0] = red;
 	color[1] = green;
 	color[2] = blue;
@@ -278,7 +334,7 @@ char	**add_line_to_map(char **map, char *line, int height)
 	return (new_map);
 }
 
-void	set_with_check_map(t_map_info *map_data, char *line, int y)
+void	set_width_check_map(t_map_info *map_data, char *line)
 {
 	int	x;
 
@@ -297,24 +353,34 @@ void	set_with_check_map(t_map_info *map_data, char *line, int y)
 void	set_map(t_game_info *game_info, char *line)
 {
 	t_map_info	*map_data;
+	int			len;
 
 	map_data = game_info->map_data;
+	// 行末の改行を削除
+	len = strlen(line);
+	if (len > 0 && line[len - 1] == '\n')
+		line[len - 1] = '\0';
+	// 1行目の場合は初期化
 	if (!map_data->map)
 	{
 		map_data->map = safe_malloc(sizeof(char *) * 2);
+		if (!map_data->map)
+			error_exit(2, "set_map: Memory allocation failed");
 		map_data->map[0] = strdup(line);
-		// if(!map_data->map[0])
-		// 	error_exit(2,"set_map malloc error");
+		if (!map_data->map[0])
+			error_exit(2, "set_map: Memory allocation failed");
 		map_data->map[1] = NULL;
 		map_data->map_height = 1;
 	}
 	else
 	{
+		// 既存のマップに行を追加
 		map_data->map = add_line_to_map(map_data->map, line,
 				map_data->map_height);
 		map_data->map_height++;
 	}
-	set_with_check_map(map_data, line, map_data->map_height - 1);
+	// 行の長さを更新し、マップの文字をチェック
+	set_width_check_map(map_data, line);
 }
 
 void	set_info_handle(t_game_info *game_info, t_opcode opcode, char *line)
@@ -330,82 +396,57 @@ void	set_info_handle(t_game_info *game_info, t_opcode opcode, char *line)
 		set_map(game_info, line);
 }
 
-void	search_player_position_and_direction(t_map_info *map_info)
+void	set_player_dir_position(t_map_info *map_info, int x, int y)
 {
 	char	**map;
-	int		x;
-	int		y;
 
 	map = map_info->map;
-	x = 0;
+	map_info->player_start_x = x + 1;
+	map_info->player_start_y = y + 1;
+	if (map[y][x] == 'N')
+		map_info->dir = NORTH;
+	else if (map[y][x] == 'S')
+		map_info->dir = SOUTH;
+	else if (map[y][x] == 'E')
+		map_info->dir = EAST;
+	else if (map[y][x] == 'W')
+		map_info->dir = WEST;
+}
+
+int	is_direction(char c)
+{
+	return (c == 'N' || c == 'S' || c == 'E' || c == 'W');
+}
+
+void	validate_player_position(t_map_info *map_info)
+{
+	int		x;
+	int		y;
+	bool	player_found;
+
 	y = 0;
-	if (map_info->dir != NOTHING)
-		error_exit(2, "dir error");
-	while (map[y])
+	player_found = false;
+	if (!map_info || !map_info->map)
+		return ;
+	while (map_info->map[y])
 	{
 		x = 0;
-		while (map[y][x] != '\0')
+		while (map_info->map[y][x] != '\0')
 		{
-			if (map[y][x] == 'N')
-				map_info->dir = NORTH;
-			else if (map[y][x] == 'S')
-				map_info->dir = SOUTH;
-			else if (map[y][x] == 'E')
-				map_info->dir = EAST;
-			else if (map[y][x] == 'W')
-				map_info->dir = WEST;
+			if (is_direction(map_info->map[y][x]))
+			{
+				if (player_found)
+					error_exit(2, "Error: Multiple players found in map");
+				set_player_dir_position(map_info, x, y);
+				player_found = true;
+			}
 			x++;
 		}
 		y++;
 	}
-	map_info->player_start_x = x;
-	map_info->player_start_y = y;
+	if (!player_found)
+		error_exit(2, "Error: No player found in map");
 }
-
-// void detect_player_position_and_direction(t_map_info *map_info)
-// {
-//     char **map;
-//     int x;
-//     int y;
-//     bool player_found = false;
-
-//     map = map_info->map;
-//     y = 0;
-//     while (map[y])
-//     {
-//         x = 0;
-//         while (map[y][x] != '\0')
-//         {
-//             if (map[y][x] == 'N' || map[y][x] == 'S' || 
-//                 map[y][x] == 'E' || map[y][x] == 'W')
-//             {
-//                 if (player_found) // 2人目のプレイヤーが見つかった
-//                     error_exit(2, "Error: Multiple players found in map");
-                
-//                 // プレイヤーの位置を記録
-//                 map_info->player_start_x = x;
-//                 map_info->player_start_y = y;
-                
-//                 // プレイヤーの向きを設定
-//                 if (map[y][x] == 'N')
-//                     map_info->dir = NORTH;
-//                 else if (map[y][x] == 'S')
-//                     map_info->dir = SOUTH;
-//                 else if (map[y][x] == 'E')
-//                     map_info->dir = EAST;
-//                 else if (map[y][x] == 'W')
-//                     map_info->dir = WEST;
-                
-//                 player_found = true;
-//             }
-//             x++;
-//         }
-//         y++;
-//     }
-    
-//     if (!player_found)
-//         error_exit(2, "Error: No player found in map");
-// }
 
 void	replace_spaces_with_walls(t_map_info *map_info)
 {
@@ -413,6 +454,8 @@ void	replace_spaces_with_walls(t_map_info *map_info)
 	int		x;
 	int		y;
 
+	if (!map_info || !map_info->map)
+		return ;
 	y = 0;
 	map = map_info->map;
 	while (map[y] != NULL)
@@ -433,18 +476,23 @@ void	set_value_from_file(t_game_info *game_info, char *filename)
 	int		fd;
 	char	*line;
 	int		opcode;
+	int		map_lines_count;
 
+	map_lines_count = 0;
 	opcode = 0;
 	fd = open(filename, O_RDONLY);
+	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		line = get_next_line(fd);
 		opcode = check_value_handle(line);
+		if (opcode == MAP)
+			map_lines_count++;
 		set_info_handle(game_info, opcode, line);
 		free(line);
+		line = get_next_line(fd);
 	}
-	replace_spaces_with_walls(game_info->map_data);
-	search_player_position_and_direction(game_info->map_data);
+	validate_player_position(game_info->map_data);  //プレイヤーの位置確認
+	replace_spaces_with_walls(game_info->map_data); //スペースを壁に
 	// check_valid_check();
 	close(fd);
 }
@@ -458,6 +506,103 @@ int	parse_args(t_game_info *game_info, char **argv)
 	return (0);
 }
 
+void	print_game_info(t_game_info *game_info)
+{
+	char	**map;
+	int		i;
+	int		j;
+
+	printf("\n\n---debug---\n\n");
+	if (game_info->north_texture)
+	{
+		if (game_info->north_texture->name)
+			printf("north_texture filename:%s\n",
+				game_info->north_texture->name);
+		printf("width = %d,height = %d\n", game_info->north_texture->width,
+			game_info->north_texture->height);
+	}
+	else
+		printf("north_texture NULL\n");
+	if (game_info->south_texture)
+	{
+		if (game_info->south_texture->name)
+			printf("south_texture filename:%s\n",
+				game_info->south_texture->name);
+		printf("width = %d,height = %d\n", game_info->south_texture->width,
+			game_info->south_texture->height);
+	}
+	else
+		printf("south_texture NULL\n");
+	if (game_info->west_texture)
+	{
+		if (game_info->west_texture->name)
+			printf("west_texture filename:%s\n", game_info->west_texture->name);
+		printf("width = %d,height = %d\n", game_info->west_texture->width,
+			game_info->west_texture->height);
+	}
+	else
+		printf("west_texture NULL\n");
+	if (game_info->east_texture)
+	{
+		if (game_info->east_texture->name)
+			printf("east_texture filename:%s\n", game_info->east_texture->name);
+		printf("width = %d,height = %d\n", game_info->east_texture->width,
+			game_info->east_texture->height);
+	}
+	else
+		printf("east_texture NULL\n");
+	printf("\n");
+	printf("Floor color   R=%d G=%d B=%d\n", game_info->floor_color[0],
+		game_info->floor_color[1], game_info->floor_color[2]);
+	printf("Ceiling color R=%d G=%d B=%d\n", game_info->ceiling_color[0],
+		game_info->ceiling_color[1], game_info->ceiling_color[2]);
+	printf("\n");
+	if (game_info->map_data)
+	{
+		printf("width = %d , height = %d\n", game_info->map_data->map_width,
+			game_info->map_data->map_height);
+		if (game_info->map_data->map)
+		{
+			map = game_info->map_data->map;
+			i = 0;
+			while (map[i])
+			{
+				j = 0;
+				while (map[i][j])
+				{
+					printf("%c", map[i][j]);
+					j++;
+				}
+				printf(" [%d]\n", j);
+				i++;
+			}
+			printf("[%d]\n", i);
+		}
+		else
+			printf("map NULL\n");
+	}
+	else
+		printf("map_data NULL\n");
+	if (game_info->map_data && game_info->map_data->dir != NOTHING)
+	{
+		printf("player x = %d, y = %d dir = ",
+			game_info->map_data->player_start_x,
+			game_info->map_data->player_start_y);
+		if (game_info->map_data->dir == WEST)
+			printf("%s\n", "WEST");
+		else if (game_info->map_data->dir == EAST)
+			printf("%s\n", "EAST");
+		else if (game_info->map_data->dir == SOUTH)
+			printf("%s\n", "SOUTH");
+		else if (game_info->map_data->dir == NORTH)
+			printf("%s\n", "NORTH");
+		else if (game_info->map_data->dir == NOTHING)
+			printf("%s\n", "UNKNOWN");
+	}
+	else
+		printf("No player direction set\n");
+	printf("\n\n---DEBUGEND---\n\n");
+}
 int	main(int argc, char **argv)
 {
 	t_game_info	*game_info;
@@ -468,7 +613,8 @@ int	main(int argc, char **argv)
 	init_game_info(game_info);
 	if (parse_args(game_info, argv) == true)
 		return (1);
+	print_game_info(game_info);
 	// execute()
-	free_game_info(game_info);
+	// free_game_info(game_info);
 	return (0);
 }

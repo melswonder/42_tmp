@@ -1,7 +1,7 @@
-NO textures/minecraft/stone_brick.xpm
-SO textures/minecraft/stone_brick.xpm
-WE textures/minecraft/stone_brick.xpm
-EA textures/minecraft/stone_brick.xpm
+EA textures/check/east.xpm
+NO textures/check/north.xpm
+SO textures/check/south.xpm
+WE textures/check/west.xpm
 
 C 53,41,34
 F 45,33,27
@@ -19,4 +19,3 @@ F 45,33,27
 111110000011111
 111111000111111
 111111111111111
-
