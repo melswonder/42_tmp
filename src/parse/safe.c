@@ -1,34 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   safe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/28 14:47:10 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:33:39 by hirwatan         ###   ########.fr       */
+/*   Created: 2025/05/03 11:02:54 by hirwatan          #+#    #+#             */
+/*   Updated: 2025/05/03 12:52:58 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/parse.h"
+#include "../../inc/parse.h"
 
-void	error_exit(int fd, char *msg)
+//mallocできるかチェック
+void	*safe_malloc(size_t bytes)
 {
-	write(fd, msg, strlen(msg));
-	exit(1);
-}
+	void	*ret;
 
-int	error_msg(int fd, char *msg,char *arg)
-{
-	while(*msg)
-		write(fd,msg++,1);
-	write(fd," ",1);
-	if(arg)
-	{
-		while(*arg)
-			write(fd,arg++,1);
-	}
-	write(fd, "\n", 1);
-	return (1);
+	ret = malloc(bytes);
+	if (ret == NULL)
+		error_exit(2,"Error in malloc");
+	return (ret);
 }
-

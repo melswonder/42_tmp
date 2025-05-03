@@ -14,26 +14,24 @@ NAME = cub3D
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-# ディレクトリパス
 SRC_DIR = src
 OBJ_DIR = obj
 INC_DIR = inc
 MLX_DIR = minilibx-linux
 
-# ソースファイル
-SRCS = $(wildcard $(SRC_DIR)/*.c)
+SRCS = $(shell find $(SRC_DIR) -name "*.c")
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-# MLX関連フラグ
+OBJ_DIRS = $(sort $(dir $(OBJS)))
+
 MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
-# ターゲット
 all: $(NAME)
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+$(OBJ_DIRS):
+	mkdir -p $@
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIRS)
 	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 
 $(NAME): $(OBJS)
@@ -49,4 +47,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+v: all
+	valgrind --leak-check=full ./cub3D ./map/test.cub
+
+.PHONY: all clean fclean re v

@@ -6,11 +6,11 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 14:47:36 by loremipsum        #+#    #+#             */
-/*   Updated: 2025/05/02 15:06:20 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 11:04:34 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/get_next_line.h"
+#include "../../inc/get_next_line.h"
 
 size_t	ft_strlen(const char *s)
 {

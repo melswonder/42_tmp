@@ -1,34 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/28 14:47:10 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:33:39 by hirwatan         ###   ########.fr       */
+/*   Created: 2025/05/03 11:01:26 by hirwatan          #+#    #+#             */
+/*   Updated: 2025/05/03 12:28:08 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/parse.h"
+#ifndef ERROR_H
+# define ERROR_H
 
-void	error_exit(int fd, char *msg)
-{
-	write(fd, msg, strlen(msg));
-	exit(1);
-}
+#define ERR_ARG_MISSING "ERROR: MISSING ARGUMENT"
+#define ERR_FILE_OPEN_ERROR "ERROR: FILE OPEN ERROR"
+#define ERR_INVALID_EXTENSION "ERROR: NOT A .CUB FILE"
+#define ERR_FILE_IS_DIR "ERROR: FILE IS DIRECTORY"
 
-int	error_msg(int fd, char *msg,char *arg)
-{
-	while(*msg)
-		write(fd,msg++,1);
-	write(fd," ",1);
-	if(arg)
-	{
-		while(*arg)
-			write(fd,arg++,1);
-	}
-	write(fd, "\n", 1);
-	return (1);
-}
-
+#endif

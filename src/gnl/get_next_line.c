@@ -6,14 +6,11 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 21:21:09 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/02 15:06:13 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 11:04:52 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "../../inc/get_next_line.h"
 
 int	find_new_line(char *str)
 {
@@ -128,18 +125,3 @@ char	*get_next_line(int fd)
 	buffer = left_over(buffer);
 	return (line);
 }
-
-// int	main(void)
-// {
-// 	int fd;
-// 	char *line;
-
-// 	fd = open("test.txt", O_RDONLY);
-// 	line = (char *)1;
-// 	while ((line = get_next_line(fd)) != NULL)
-// 	{
-// 		printf("%s", line);
-// 		free(line);
-// 	}
-// 	close(fd);
-// }
