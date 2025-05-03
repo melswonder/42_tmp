@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:09:08 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:52:43 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:09:12 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ int	parse_args(t_game_info *game_info, char **argv)
 		return (free_game_info_no_mlx(game_info), 1);
 	set_value_from_file(game_info, argv[1]);
 	// if (!check_valid_map(game_info->map_data)) mapcheck未実装
+	game_info->mlx = mlx_init();
+	game_info->mlx_win = mlx_new_window(game_info->mlx, WIN_X, WIN_Y, "cub3D");
+	load_texture_from_xpm(game_info);
 	return (0);
 }
 

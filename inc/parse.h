@@ -6,13 +6,19 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:00:47 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:36:45 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 17:38:30 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <stdlib.h>
-# include "cub3D.h"
-# include "get_next_line.h"
+#include "cub3D.h"
+#include "get_next_line.h"
+#include <stdlib.h>
+
+#define WIN_X 1200
+#define WIN_Y 800
+
+#define IMG_WIDTH 64
+#define IMG_HEIGHT 64
 
 /* main.c */
 int		main(int argc, char **argv);
@@ -70,3 +76,7 @@ int		error_msg(int fd, char *msg, char *arg);
 
 /* debug/debug.c */
 void	print_game_info(t_game_info *game_info);
+void	print_key_press(int keycode);
+
+/* xpm_loader.c */
+int		load_texture_from_xpm(t_game_info *game_info);

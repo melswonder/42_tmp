@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 12:57:13 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:27:52 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:35:10 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,6 @@ typedef struct s_texture_img
 {
 	char			*name;
 	void			*img;
-	char			*addr;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
 	int				width;
 	int				height;
 }					t_texture_img;

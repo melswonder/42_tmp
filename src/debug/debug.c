@@ -6,11 +6,41 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:05:16 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:33:54 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 17:40:25 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../inc/keycode.h"
 #include "../../inc/parse.h"
+
+void	print_key_press(int keycode)
+{
+	printf("キーコード: %d - ", keycode);
+	if (keycode == ESC_KEY)
+		printf("ESC が押されました\n");
+	else if (keycode == UP_KEY)
+		printf(" ↑  が押されました\n");
+	else if (keycode == DOWN_KEY)
+		printf(" ↓  が押されました\n");
+	else if (keycode == RIGHT_KEY)
+		printf(" →  が押されました\n");
+	else if (keycode == LEFT_KEY)
+		printf(" ←  が押されました\n");
+	else if (keycode == W_KEY)
+		printf("   W  が押されました\n");
+	else if (keycode == A_KEY)
+		printf("    A  が押されました\n");
+	else if (keycode == S_KEY)
+		printf("   S  が押されました\n");
+	else if (keycode == D_KEY)
+		printf("   D  が押されました\n");
+	else if (keycode == Q_KEY)
+		printf("   Q  が押されました\n");
+	else if (keycode == Z_KEY)
+		printf("   Z  が押されました\n");
+	else
+		printf("   未定義のキー\n");
+}
 
 void	print_game_info(t_game_info *game_info)
 {

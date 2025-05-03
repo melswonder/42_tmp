@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 10:59:12 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:34:42 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:36:18 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,6 @@ void	init_img(t_texture_img *img)
 {
 	img->name = NULL;
 	img->img = NULL;
-	img->addr = NULL;
-	img->bits_per_pixel = 0;
-	img->line_length = 0;
-	img->endian = 0;
 	img->width = 0;
 	img->height = 0;
 }

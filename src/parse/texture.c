@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:44:55 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 13:06:09 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:00:11 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@ int	set_texture(t_game_info *game_info, char *line, t_opcode opcode)
 	t_texture_img	*texture;
 	char			*path;
 	int				i;
+	int				len;
 
+	len = strlen(line);
+	if (len > 0 && line[len - 1] == '\n')
+		line[len - 1] = '\0';
 	texture = NULL;
 	if (opcode == NORTH_TEXTURE)
 		texture = game_info->north_texture;
@@ -42,7 +46,7 @@ int	set_texture(t_game_info *game_info, char *line, t_opcode opcode)
 	return (0);
 }
 
-//C 255,255,255ときた時に カンマ区切りのため、インクリメントをアドレスとして渡す
+// C 255,255,255ときた時に カンマ区切りのため、インクリメントをアドレスとして渡す
 //呼べば自動的に次の色の開始地点までインクリメントを飛ばしてくれる。　R G Bを確保することができる。
 int	get_arg_color(char *line, int *pos)
 {
