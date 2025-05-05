@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:28:49 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/05 21:27:37 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/06 00:26:45 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,48 +29,20 @@
 #define PI 3.141592654
 #define ANGLE_COUNT 360
 
-float	cos_table[ANGLE_COUNT];
-float	sin_table[ANGLE_COUNT];
+
 
 void	init_trig_tables(void)
 {
-	int	i;
+	int	i = -1;
 
-	cos_table[0] = 1.0;
-	sin_table[0] = 0.0;
-	cos_table[90] = 0.0;
-	sin_table[90] = 1.0;
-	cos_table[180] = -1.0;
-	sin_table[180] = 0.0;
-	cos_table[270] = 0.0;
-	sin_table[270] = -1.0;
-	for (i = 1; i < 90; i++)
+	while (++i < ANGLE_COUNT)
 	{
-		cos_table[i] = cos_table[0] - (i / 90.0) * (cos_table[0]
-				- cos_table[90]);
-		sin_table[i] = sin_table[0] + (i / 90.0) * (sin_table[90]
-				- sin_table[0]);
-	}
-	for (i = 91; i < 180; i++)
-	{
-		cos_table[i] = cos_table[90] - (i - 90) / 90.0 * (cos_table[90]
-				- cos_table[180]);
-		sin_table[i] = sin_table[90] - (i - 90) / 90.0 * (sin_table[90]
-				- sin_table[180]);
-	}
-	for (i = 181; i < 270; i++)
-	{
-		cos_table[i] = cos_table[180] - (i - 180) / 90.0 * (cos_table[180]
-				- cos_table[270]);
-		sin_table[i] = sin_table[180] - (i - 180) / 90.0 * (sin_table[180]
-				- sin_table[270]);
-	}
-	for (i = 271; i < 360; i++)
-	{
-		cos_table[i] = cos_table[270] - (i - 270) / 90.0 * (cos_table[270]
-				- cos_table[0]);
-		sin_table[i] = sin_table[270] - (i - 270) / 90.0 * (sin_table[270]
-				- sin_table[0]);
+		const int	q = i / 90;
+		const int	p = i % 90;
+		const float	ratio = p / 90.0f;
+
+		cos_table[i] = (float[]){1 - ratio, -ratio, -1 + ratio, ratio}[q];
+		sin_table[i] = (float[]){ratio, 1 - ratio, -ratio, -1 + ratio}[q];
 	}
 }
 

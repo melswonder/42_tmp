@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:11:15 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/05 21:21:55 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/06 00:05:14 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include "../inc/keycode.h"
 #include "../inc/parse.h"
 #include "../inc/render.h"
+#include "../inc/minimap.h"
 
-#define BLOCK_SIZE 12 // mapのサイズを定義できます
 
 void		update_player_position(t_game_info *game_info);
 int			is_valid_position(t_game_info *game_info, float x, float y);
@@ -157,8 +157,7 @@ int	main(int argc, char **argv)
 	render(game_info);
 	mlx_hook(game_info->mlx_win, 2, 1L << 0, key_press, game_info);   // key
 	mlx_hook(game_info->mlx_win, 3, 1L << 1, key_release, game_info); // key
-	mlx_hook(game_info->mlx_win, 17, 0, close_window, game_info);
-	//バツボタンで抜ける　https://harm-smits.github.io/42docs/libs/minilibx/events.html
+	mlx_hook(game_info->mlx_win, 17, 0, close_window, game_info);//バツボタンで抜ける　https://harm-smits.github.io/42docs/libs/minilibx/events.html
 	mlx_loop_hook(game_info->mlx, game_loop, game_info);
 	mlx_loop(game_info->mlx);
 	return (0);
