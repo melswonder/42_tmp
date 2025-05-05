@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:30:48 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:50:00 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/04 16:16:29 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,3 @@ void	replace_spaces_with_walls(t_map_info *map_info)
 		y++;
 	}
 }
-
-// // マップが有効な形状かチェック
-// bool validate_map_boundaries(t_map_info *map_info)
-// {
-//     // マップの境界チェックのロジックを実装
-//     // 今後の課題として残しておく
-//     return true;
-// }
-
-// マップが閉じているか検証
-// bool is_map_enclosed(t_map_info *map_info);

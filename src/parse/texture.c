@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   texture.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 11:44:55 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 16:00:11 by hirwatan         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/05/04 19:19:31 by ktakeuch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../../inc/parse.h"
 
 int	set_texture(t_game_info *game_info, char *line, t_opcode opcode)
 {
-	t_texture_img	*texture;
-	char			*path;
-	int				i;
-	int				len;
+	t_cub_img	*texture;
+	char		*path;
+	int			i;
+	int			len;
 
 	len = strlen(line);
 	if (len > 0 && line[len - 1] == '\n')

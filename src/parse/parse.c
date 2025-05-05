@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:09:08 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 16:09:12 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/04 21:04:29 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,10 @@ int	parse_args(t_game_info *game_info, char **argv)
 {
 	if (check_file(argv[1]) == true)
 		return (free_game_info_no_mlx(game_info), 1);
-	set_value_from_file(game_info, argv[1]);
-	// if (!check_valid_map(game_info->map_data)) mapcheck未実装
-	game_info->mlx = mlx_init();
-	game_info->mlx_win = mlx_new_window(game_info->mlx, WIN_X, WIN_Y, "cub3D");
-	load_texture_from_xpm(game_info);
+	if(set_value_from_file(game_info, argv[1]) == true)
+		return(free_game_info_no_mlx(game_info),1);
+	if (!check_valid_map(game_info->map_data)) // mapcheck実装
+		return (error_exit(2, "map_floodfill_faild"), 0);
 	return (0);
 }
 
@@ -42,7 +41,7 @@ int	check_file(char *filename)
 }
 
 //.cubファイルに書かれているものを構造体に格納する
-void	set_value_from_file(t_game_info *game_info, char *filename)
+int	set_value_from_file(t_game_info *game_info, char *filename)
 {
 	int		fd;
 	char	*line;
@@ -53,6 +52,8 @@ void	set_value_from_file(t_game_info *game_info, char *filename)
 	opcode = 0;
 	fd = open(filename, O_RDONLY); // check済みのためエラーチェックを省略する
 	line = get_next_line(fd);
+	if (!line || line[0] == '\0')
+		return (error_msg(2, ERR_FILE_CONTENTS_ENPTY, NULL));
 	while (line != NULL)
 	{
 		opcode = check_value_handle(line);
@@ -65,4 +66,5 @@ void	set_value_from_file(t_game_info *game_info, char *filename)
 	detect_player_position(game_info->map_data);    //プレイヤーの位置確認
 	replace_spaces_with_walls(game_info->map_data); //スペースを壁に
 	close(fd);
+	return(0);
 }

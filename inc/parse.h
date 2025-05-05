@@ -5,20 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 11:00:47 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 17:38:30 by hirwatan         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/05/04 21:03:24 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
-#include "get_next_line.h"
-#include <stdlib.h>
+#ifndef PARSE_H
+# define PARSE_H
 
-#define WIN_X 1200
-#define WIN_Y 800
-
-#define IMG_WIDTH 64
-#define IMG_HEIGHT 64
+# include "cub3D.h"
+# include "error.h"
+# include "get_next_line.h"
+# include "keycode.h"
+# include "libft.h"
+// # include "parse.h"
+# include "raycast.h"
+# include "render.h"
+# include "utils.h"
 
 /* main.c */
 int		main(int argc, char **argv);
@@ -26,18 +29,15 @@ int		main(int argc, char **argv);
 /* parse/parse.c */
 int		parse_args(t_game_info *game_info, char **argv);
 int		check_file(char *filename);
-void	set_value_from_file(t_game_info *game_info, char *filename);
+int		set_value_from_file(t_game_info *game_info, char *filename);
 
 /* parse/init.c */
 void	init_game_info(t_game_info *game_info);
-void	init_img(t_texture_img *img);
+void	init_texture_img(t_cub_img *img);
 void	init_map(t_map_info *map);
-
-/* parse/free.c */
-void	free_game_info_no_mlx(t_game_info *game_info);
-void	free_game_info(t_game_info *game_info);
-void	free_map(t_map_info *map_info);
-void	free_mlx_img(void *mlx, t_texture_img *img);
+int		init_mlx_and_texture(t_game_info *game_info);
+void	init_mlx_img(t_game_info *game_info, t_cub_img *image, int width,
+			int height);
 
 /* parse/handle.c */
 void	set_info_handle(t_game_info *game_info, t_opcode opcode, char *line);
@@ -67,12 +67,16 @@ void	validate_map_line(t_map_info *map_data, char *line);
 
 /* map/map_validator.c */
 void	replace_spaces_with_walls(t_map_info *map_info);
-bool	validate_map_boundaries(t_map_info *map_info);
-bool	is_map_enclosed(t_map_info *map_info);
+bool	check_valid_map(t_map_info *map_info);
+bool	is_map_closed(t_map_info *map_info);
+char	**map_copy(t_map_info *map_info);
 
-/* util.c */
-void	error_exit(int fd, char *msg);
-int		error_msg(int fd, char *msg, char *arg);
+/* map/fllod_fill.c */
+bool	check_valid_map(t_map_info *map_info);
+char	**map_copy(t_map_info *map_info);
+bool	floodFill(char **map, int x, int y, char target, char replace, int rows,
+			int cols);
+bool	isInBounds(int x, int y, int rows, int cols);
 
 /* debug/debug.c */
 void	print_game_info(t_game_info *game_info);
@@ -80,3 +84,5 @@ void	print_key_press(int keycode);
 
 /* xpm_loader.c */
 int		load_texture_from_xpm(t_game_info *game_info);
+
+#endif

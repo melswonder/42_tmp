@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   xpm_loader.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 15:12:09 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 16:46:50 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:33:15 by ktakeuch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/parse.h"
 
-static int	load_single_texture(void *mlx, t_texture_img *texture)
+static int	load_single_texture(void *mlx, t_cub_img *texture)
 {
 	int	width;
 	int	height;
@@ -22,6 +22,8 @@ static int	load_single_texture(void *mlx, t_texture_img *texture)
 	texture->img = mlx_xpm_file_to_image(mlx, texture->name, &width, &height);
 	if (!texture->img)
 		return (error_msg(2, "Failed to load texture", texture->name));
+	texture->addr = mlx_get_data_addr(texture->img, &texture->bits_per_pixel,
+			&texture->line_length, &texture->endian);
 	texture->width = width;
 	texture->height = height;
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:13:21 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:34:48 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:15:28 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,12 @@ void	free_game_info(t_game_info *game_info)
 		mlx_destroy_window(game_info->mlx, game_info->mlx_win);
 	if (game_info->mlx)
 		mlx_destroy_display(game_info->mlx);
+	free(game_info->player);
+	free(game_info->mlx);
 	free(game_info);
 }
 
-void	free_mlx_img(void *mlx, t_texture_img *img)
+void	free_mlx_img(void *mlx, t_cub_img *img)
 {
 	if (img)
 	{

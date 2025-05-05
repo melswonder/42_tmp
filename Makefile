@@ -32,15 +32,15 @@ $(OBJ_DIRS):
 	mkdir -p $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIRS)
-	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 
 $(NAME): $(OBJS)
 	$(MAKE) -C $(MLX_DIR)
-	$(CC) $(CFLAGS) $(OBJS) $(MLX_FLAGS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(MLX_FLAGS) -o $(NAME)
 
 clean:
 	rm -rf $(OBJ_DIR)
-	$(MAKE) -C $(MLX_DIR) clean
+	@$(MAKE) -C $(MLX_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
@@ -48,6 +48,6 @@ fclean: clean
 re: fclean all
 
 v: all
-	valgrind --leak-check=full ./cub3D ./map/test.cub
+	valgrind --leak-check=full --show-leak-kinds=all ./cub3D ./map/test.cub
 
 .PHONY: all clean fclean re v

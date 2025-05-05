@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 21:21:09 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 11:04:52 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:40:53 by ktakeuch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/get_next_line.h"
+#include "libft.h"
 
 int	find_new_line(char *str)
 {

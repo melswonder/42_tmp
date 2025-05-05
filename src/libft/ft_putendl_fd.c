@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/28 14:47:10 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:33:39 by hirwatan         ###   ########.fr       */
+/*   Created: 2024/10/25 21:35:29 by ktakeuch          #+#    #+#             */
+/*   Updated: 2024/10/25 23:22:37 by ktakeuch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/parse.h"
+#include "libft.h"
 
-void	error_exit(int fd, char *msg)
-{
-	write(fd, msg, strlen(msg));
-	exit(1);
-}
+// #include <unistd.h>
 
-int	error_msg(int fd, char *msg,char *arg)
+void	ft_putendl_fd(char *s, int fd)
 {
-	while(*msg)
-		write(fd,msg++,1);
-	write(fd," ",1);
-	if(arg)
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0')
 	{
-		while(*arg)
-			write(fd,arg++,1);
+		write(fd, &s[i], 1);
+		i++;
 	}
 	write(fd, "\n", 1);
-	return (1);
 }
 
+// int main()
+// {
+// 	ft_putendl_fd("will finish by 2025/10",1);
+// 	return (1);
+// }
