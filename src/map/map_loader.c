@@ -6,14 +6,14 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:32:49 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:49:25 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/10 16:56:05 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/parse.h"
 
 //渡されたlineをmapの構造体のmap**格納する
-void	set_map(t_game_info *game_info, char *line)
+int	check_set_map(t_game_info *game_info, char *line)
 {
 	t_map_info	*map_data;
 	int			len;
@@ -23,14 +23,16 @@ void	set_map(t_game_info *game_info, char *line)
 	len = strlen(line);
 	if (len > 0 && line[len - 1] == '\n')
 		line[len - 1] = '\0';
-	if (!map_data->map)	// 1行目の場合は初期化
+	if (!map_data->map) // 1行目の場合は初期化
 	{
 		map_data->map = safe_malloc(sizeof(char *) * 2);
 		if (!map_data->map)
-			error_exit(2, "set_map: Memory allocation failed");
+			error_free_exit(game_info, 2,
+				"check_set_map: Memory allocation failed");
 		map_data->map[0] = strdup(line);
 		if (!map_data->map[0])
-			error_exit(2, "set_map: Memory allocation failed");
+			error_free_exit(game_info, 2,
+				"check_set_map: Memory allocation failed");
 		map_data->map[1] = NULL;
 		map_data->map_height = 1;
 	}
@@ -40,10 +42,12 @@ void	set_map(t_game_info *game_info, char *line)
 				map_data->map_height);
 		map_data->map_height++;
 	}
-	validate_map_line(map_data, line);
+	if (validate_map_line(map_data, line) == FAILURE)
+		return (1);
+	return (0);
 }
 
-//char **mapを拡張して追加していく
+// char **mapを拡張して追加していく
 char	**add_line_to_map(char **map, char *line, int height)
 {
 	char	**new_map;
@@ -64,21 +68,21 @@ char	**add_line_to_map(char **map, char *line, int height)
 	return (new_map);
 }
 
-//
-void	validate_map_line(t_map_info *map_data, char *line)
+int	validate_map_line(t_map_info *map_data, char *line)
 {
-	int x;
+	int	x;
 
 	x = 0;
 	while (line[x])
 	{
 		if (line[x] != '0' && line[x] != '1' && line[x] != ' ' && line[x] != 'N'
 			&& line[x] != 'S' && line[x] != 'E' && line[x] != 'W')
-			error_exit(2, "Invalid character in map");
+			return (error_msg(2, ERR_MAP_IS_INVALID, NULL));
 		x++;
 	}
 	if (x > map_data->map_width) //読み込んだmapの横幅の最大値を更新していく
 		map_data->map_width = x;
+	return (0);
 }
 
 // 1111111

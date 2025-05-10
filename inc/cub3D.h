@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 12:57:13 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/05 21:26:45 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:43:33 by ktakeuch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <dirent.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <math.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -39,10 +40,16 @@
 # define SUCCESS 0
 
 // Macros - mlx
-# define WIN_X 1980
-# define WIN_Y 1260
+# define WIN_X 1200
+# define WIN_Y 800
 # define IMG_WIDTH 64
 # define IMG_HEIGHT 64
+# define WIN_X 1200
+# define WIN_Y 800
+# define IMG_WIDTH 64
+# define IMG_HEIGHT 64
+
+# define FOV_SCALE 0.66
 
 // ============================
 // ===== Typedefs =============
@@ -68,6 +75,12 @@ typedef enum e_direction
 	WEST,
 	EAST
 }				t_direction;
+
+typedef enum e_side
+{
+	VERTICAL_SIDE,
+	HORIZONTAL_SIDE
+}				t_side;
 
 typedef struct s_map_info
 {
@@ -102,16 +115,40 @@ typedef struct s_cub_img
 
 typedef struct s_player
 {
-	float		x;
-	float		y;
-	int			angle;
-	int			move_up;
-	int			move_down;
-	int			move_left;
-	int			move_right;
-	int			rotate_left;
-	int			rotate_right;
+	float minimap_player_x; // minimapのplayerのx
+	float		minimap_player_y;
+	float		pos_x;
+	float		pos_y;
+	float		dir_x;
+	float		dir_y;
+	float		plane_x;
+	float		plane_y;
+	float		angle;
+	bool move_up; //キーが押されたかのbool
+	bool		move_down;
+	bool		move_left;
+	bool		move_right;
+	bool		rotate_left;
+	bool		rotate_right;
 }				t_player;
+
+typedef struct s_ray
+{
+	float		camera_x;
+	int			map_x;
+	int			map_y;
+	float		dir_x;
+	float		dir_y;
+	float		side_dist_x;
+	float		side_dist_y;
+	int			step_x;
+	int			step_y;
+	float		delta_dist_x;
+	float		delta_dist_y;
+	float		distance_to_wall_full;
+	float		distance_to_wall_perp;
+	int			collision_side;
+}				t_ray;
 
 typedef struct s_game_info
 {
@@ -129,6 +166,9 @@ typedef struct s_game_info
 	int			line_length;
 	int			endian;
 	t_player *player; //レイトレーシングの構造体を追加するならこんな感じ？？
+	// t_ray	*ray;
+	// t_cub_img *main_img;
+	// t_cub_img *minimap;
 }				t_game_info;
 
 #endif

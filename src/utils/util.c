@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:47:10 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 20:35:23 by ktakeuch         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:51:05 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,15 @@
 
 void	error_exit(int fd, char *msg)
 {
-	write(fd, msg, strlen(msg));
+	if(msg!=NULL)
+		write(fd, msg, strlen(msg));
 	exit(1);
+}
+
+void error_free_exit(t_game_info *game_info,int fd,char *msg)
+{
+	free_game_info(game_info);
+	error_exit(fd,msg);	
 }
 
 int	error_msg(int fd, char *msg,char *arg)

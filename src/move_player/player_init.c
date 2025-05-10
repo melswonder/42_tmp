@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   player.c                                           :+:      :+:    :+:   */
+/*   player_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:24:01 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:50:32 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/10 16:49:05 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/parse.h"
 
 //プレイヤーの向きと座標を格納する
-void	detect_player_position(t_map_info *map_info)
+int	detect_player_position(t_map_info *map_info)
 {
 	int		x;
 	int		y;
@@ -22,7 +22,7 @@ void	detect_player_position(t_map_info *map_info)
 	y = 0;
 	player_found = false;
 	if (!map_info || !map_info->map)
-		return ;
+		return (error_msg(2,ERR_MAP_EMPTY,NULL));
 	while (map_info->map[y])
 	{
 		x = 0;
@@ -31,7 +31,7 @@ void	detect_player_position(t_map_info *map_info)
 			if (is_direction_char(map_info->map[y][x]))
 			{
 				if (player_found)
-					error_exit(2, "Error: Multiple players found in map");
+					return(error_msg(2, ERR_PLAYER_TOO_MAMY, NULL));
 				set_player_dir_position(map_info, x, y);
 				player_found = true;
 			}
@@ -40,8 +40,10 @@ void	detect_player_position(t_map_info *map_info)
 		y++;
 	}
 	if (!player_found)
-		error_exit(2, "Error: No player found in map");
+		return(error_msg(2,ERR_PLAYER_IS_MISSING,NULL));
+	return(0);
 }
+
 
 int	is_direction_char(char c)
 {

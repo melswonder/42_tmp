@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 01:54:42 by kohki_T           #+#    #+#             */
-/*   Updated: 2025/05/04 20:45:31 by ktakeuch         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:42:09 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 # include "get_next_line.h"
 # include "keycode.h"
 // # include "libft.h"
+# include "minimap.h"
 # include "parse.h"
+# include "player.h"
 # include "raycast.h"
 # include "render.h"
 # include "utils.h"
@@ -65,8 +67,8 @@ char			*ft_strndup(const char *s, size_t n);
 char			*ft_substr(const char *s, unsigned int start, size_t len);
 char			*ft_strjoin(const char *s1, const char *s2);
 char			*ft_strtrim(const char *s1, const char *set);
-// char				**ft_split(char const *s, char c);
-char			**ft_split(const char *sep, char *strs);
+char			**ft_split(char const *s, char c);
+// char			**ft_split(const char *sep, char *strs);
 
 char			*ft_itoa(int n);
 // char				*ft_strmapi(const char *s, char (*f)(unsigned int, char));
@@ -99,7 +101,7 @@ char			*ft_tolowerall(char *str);
 // int					ft_printf(const char *format, ...);
 
 // // getnextline
-char				*get_next_line(int fd);
+char			*get_next_line(int fd);
 // char				*ft_before_newline(char *str);
 // char				*ft_after_newline(char *str);
 // char				*read_line_loop(int fd, int nb, char *buffer, char *save);

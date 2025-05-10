@@ -48,6 +48,6 @@ fclean: clean
 re: fclean all
 
 v: all
-	valgrind --leak-check=full --show-leak-kinds=all ./cub3D ./map/test.cub
+	valgrind --leak-check=full ./cub3D ./map/test.cub
 
 .PHONY: all clean fclean re v

@@ -6,29 +6,36 @@
 /*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 11:48:47 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/03 12:39:22 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:46:37 by hirwatan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/parse.h"
 
-void	set_info_handle(t_game_info *game_info, t_opcode opcode, char *line)
+int	check_and_set_line(t_game_info *game_info, t_opcode opcode, char *line)
 {
+	int	ret;
+
+	ret = 0;
+	// if(opcode == ERROR_H)多分中身から
 	if (opcode == NORTH_TEXTURE || opcode == SOUTH_TEXTURE
 		|| opcode == WEST_TEXTURE || opcode == EAST_TEXTURE)
-		set_texture(game_info, line, opcode);
+		ret = check_set_texture(game_info, line, opcode);
 	else if (opcode == FLOOR_COLOR)
-		set_colore(game_info, line, opcode);
+		ret = check_set_color(game_info, line, opcode);
 	else if (opcode == CEILING_COLOR)
-		set_colore(game_info, line, opcode);
+		ret = check_set_color(game_info, line, opcode);
 	else if (opcode == MAP)
-		set_map(game_info, line);
+		ret = check_set_map(game_info, line);
+	if (ret == 1)
+		error_free_exit(game_info, 2, NULL);
+	return (0);
 }
 
 int	check_value_handle(char *line)
 {
-	int		i;
-	char	*tmp_line;
+	int i;
+	char *tmp_line;
 
 	if (!line || !*line)
 		return (SPACE_OPCODE);

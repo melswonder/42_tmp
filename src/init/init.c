@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hirwatan <hirwatan@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ktakeuch <ktakeuch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 10:59:12 by hirwatan          #+#    #+#             */
-/*   Updated: 2025/05/05 19:28:42 by hirwatan         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:56:18 by ktakeuch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	init_game_info(t_game_info *game_info)
 	game_info->mlx = NULL;
 	game_info->mlx_win = NULL;
 	game_info->player = safe_malloc(sizeof(t_player));
-	game_info->player->x = WIN_X / 2;
-	game_info->player->y = WIN_X / 2;
 }
 
 // init texture img ? のほうが良い？
@@ -92,3 +90,35 @@ int	init_mlx_and_texture(t_game_info *game_info)
 	load_texture_from_xpm(game_info);
 	return (0);
 }
+
+void	init_player(t_game_info *game_info)
+{
+	double angle_rad;
+	if (game_info->map_data->dir == NORTH)//数学座標に合わせました
+		game_info->player->angle = 90;
+	if (game_info->map_data->dir == SOUTH)
+		game_info->player->angle = 270;
+	if (game_info->map_data->dir == WEST)
+		game_info->player->angle = 180;
+	if (game_info->map_data->dir == EAST)
+		game_info->player->angle = 0;
+
+	game_info->player->pos_x = game_info->map_data->player_start_x;
+	game_info->player->pos_y = game_info->map_data->player_start_y;
+	angle_rad = game_info->player->angle * M_PI / 180.0;
+	game_info->player->dir_x = cos(angle_rad);
+	game_info->player->dir_y = sin(angle_rad);
+	printf("dir x %f dir y %f\n", game_info->player->dir_x, game_info->player->dir_y);
+	game_info->player->plane_x = - game_info->player->dir_y * FOV_SCALE;
+	game_info->player->plane_y = game_info->player->dir_x * FOV_SCALE;
+
+	game_info->player->move_up = false;
+	game_info->player->move_down = false;
+	game_info->player->move_left = false;
+	game_info->player->move_right = false;
+	game_info->player->rotate_left = false;
+	game_info->player->rotate_right = false;
+	game_info->player->minimap_player_x = game_info->map_data->player_start_x;
+	game_info->player->minimap_player_y = game_info->map_data->player_start_y;
+}
+//pos_x pos_yを基準にminimapを修正する
